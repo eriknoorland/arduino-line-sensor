@@ -78,15 +78,15 @@ void loop() {
   long now = millis();
 
   if (now - previousTime >= loopTime) {
-    int16_t ladc0 = adsLeft.readADC_SingleEnded(0) * 3;
-    int16_t ladc1 = adsLeft.readADC_SingleEnded(1) * 3;
-    int16_t ladc2 = adsLeft.readADC_SingleEnded(2) * 3;
-    int16_t ladc3 = adsLeft.readADC_SingleEnded(3) * 3;
+    int16_t ladc0 = adsLeft.readADC_SingleEnded(0);
+    int16_t ladc1 = adsLeft.readADC_SingleEnded(1);
+    int16_t ladc2 = adsLeft.readADC_SingleEnded(2);
+    int16_t ladc3 = adsLeft.readADC_SingleEnded(3);
 
-    int16_t radc0 = adsRight.readADC_SingleEnded(0) * 3;
-    int16_t radc1 = adsRight.readADC_SingleEnded(1) * 3;
-    int16_t radc2 = adsRight.readADC_SingleEnded(2) * 3;
-    int16_t radc3 = adsRight.readADC_SingleEnded(3) * 3;
+    int16_t radc0 = adsRight.readADC_SingleEnded(0);
+    int16_t radc1 = adsRight.readADC_SingleEnded(1);
+    int16_t radc2 = adsRight.readADC_SingleEnded(2);
+    int16_t radc3 = adsRight.readADC_SingleEnded(3);
 
     byte ladc0Part1 = ladc0 >> 8;
     byte ladc0Part2 = ladc0;
