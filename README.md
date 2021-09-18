@@ -20,11 +20,17 @@ Firmware to manage a Pololu QTR-8A sensor array connected to two ADS1015's commu
 | Request  | Value  | Payload |
 |----------|--------|---------|
 | IS_READY | `0x01` | N/A     |
+| RESET    | `0x02` | N/A     |
 
 #### Is ready Request
 Request: `0xA1` `0x01`
 
 Triggers the ready response to make sure the Arduino is ready for operation.
+
+#### Reset Request
+Request: `0xA1` `0x02`
+
+Resets the ready boolean to false to prevent data being sent out when not connected.
 
 ### Responses Overview
 

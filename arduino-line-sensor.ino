@@ -4,6 +4,7 @@
 
 const byte REQUEST_START_FLAG = 0xA1;
 const byte REQUEST_IS_READY = 0x01;
+const byte REQUEST_RESET = 0x02;
 
 const byte RESPONSE_START_FLAG_1 = 0xA1;
 const byte RESPONSE_START_FLAG_2 = 0x1A;
@@ -13,6 +14,8 @@ const byte RESPONSE_READY = 0xFF;
 const int loopTime = 20;
 unsigned long previousTime = 0;
 
+bool isReady = false;
+
 Adafruit_ADS1015 adsLeft;
 Adafruit_ADS1015 adsRight;
 PacketSerial serial;
@@ -20,7 +23,7 @@ PacketSerial serial;
 /**
  * Send the ready response
  */
-void isReady() {
+void responseReady() {
   uint8_t readyResponse[4] = {
     RESPONSE_START_FLAG_1,
     RESPONSE_START_FLAG_2,
@@ -29,6 +32,11 @@ void isReady() {
   };
 
   serial.send(readyResponse, sizeof(readyResponse));
+  isReady = true;
+}
+
+void reset() {
+  isReady = false;
 }
 
 /**
@@ -43,7 +51,12 @@ void onPacketReceived(const uint8_t* buffer, size_t size) {
   if (startFlag == REQUEST_START_FLAG) {
     switch (command) {
       case REQUEST_IS_READY: {
-        isReady();
+        responseReady();
+        break;
+      }
+
+      case REQUEST_RESET: {
+        reset();
         break;
       }
     }
@@ -64,7 +77,7 @@ void setup() {
 
   while (!Serial) {}
 
-  isReady();
+  responseReady();
 
   previousTime = millis();
 }
@@ -77,7 +90,7 @@ void loop() {
 
   long now = millis();
 
-  if (now - previousTime >= loopTime) {
+  if (isReady && now - previousTime >= loopTime) {
     int16_t ladc0 = adsLeft.readADC_SingleEnded(0);
     int16_t ladc1 = adsLeft.readADC_SingleEnded(1);
     int16_t ladc2 = adsLeft.readADC_SingleEnded(2);
