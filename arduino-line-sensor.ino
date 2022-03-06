@@ -21,6 +21,15 @@ Adafruit_ADS1015 adsRight;
 PacketSerial serial;
 
 /**
+ * Send the identifier response
+ */
+void responseIdentifier() {
+  uint8_t dataResponse[4] = { 0x6C, 0x69, 0x6E, 0x65 }; // spells 'line'
+
+  serial.send(dataResponse, sizeof(dataResponse));
+}
+
+/**
  * Send the ready response
  */
 void responseReady() {
@@ -60,6 +69,8 @@ void onPacketReceived(const uint8_t* buffer, size_t size) {
         break;
       }
     }
+  } else if (startFlag == 0xAA && command == 0xAA && buffer[2] == 0xAA && buffer[3] == 0xAA) {
+    responseIdentifier();
   }
 }
 
@@ -76,8 +87,6 @@ void setup() {
   adsRight.begin(0x49);
 
   while (!Serial) {}
-
-  responseReady();
 
   previousTime = millis();
 }
